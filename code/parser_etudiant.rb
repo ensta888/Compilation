@@ -3,26 +3,59 @@ require_relative 'lexer'
 
 
 # A COMPLETER !
-OBERON_TOKEN_DEF={
+JAVASCRIPT_TOKEN_DEF={
+#----------------keyword--------------------
   :module	=> /module|MODULE/,
   :end		=> /end|END/,
   :procedure	=> /procedure|PROCEDURE/,
   :begin	=> /begin|BEGIN/,
   :array	=> /array|ARRAY/,
-  :of	        => /of|OF/,
-  :if		=> /if|IF/,
+  :of	        => /of|OF/, 
   :elsif	=> /elsif|ELSIF/,
   :else		=> /else|ELSE/,
-  :then		=> /then|THEN/,
-  :do		=> /do|DO/,
-  :var   	=> /var|VAR/,
-  :while	=> /WHILE|while/,
+  :then		=> /then|THEN/,  
   :type		=> /integer|INTEGER/,
   :type		=> /type|TYPE/,
+
+   
+  :break        => /break|BREAK/,
+  :case         => /case|CASE/,
+  :class        => /class|CLASS/,
+  :catch        => /catch|CATCH/,
+  :break        => /break|BREAK/,
   :const	=> /const|CONST/,
+  :continue     => /continue|CONTINUE/,
+  :debugger     => /debugger|DEBUGGER/,
+  :default      => /default|DEFAULT/,
+  :do           => /do|DO/,
+  :else         => /else|ELSE/,
+  :export       => /export|EXPORT/,
+  :extend       => /extend|EXTEND/,
+  :finally      => /finally|FINALLY/,
+  :for		=> /for|FOR/,
+  :function	=> /function|FUNCTION/,
+  :if		=> /if|IF/,
+  :import	=> /import|IMPORT/,
+  :in		=> /in|IN/,
+  :instanceof	=> /instanceof|INSTANCEOF/,
+  :let		=> /let|LET/,
+  :new		=> /new|NEW/,
+  :return	=> /return|RETURN/,
+  :super	=> /super|SUPER/,
+  :switch	=> /switch|SWITCH/,
+  :this 	=> /this|THIS/,
+  :throw	=> /throw|SWITCH/,
+  :try  	=> /try|TRY/,
+  :typeof	=> /typeof|TYPEOF/,
+  :var   	=> /var|VAR/,
+  :void   	=> /void|VOID/,
+  :while	=> /WHILE|while/,
+  :var   	=> /var|VAR/,
+  :with   	=> /with|WITH/,
+  :yield  	=> /yield|YIELD/,
+#-----------------ponctuation----------------
   :semicolon	=> /\;/,
-  :dot		=> /\./,
-  
+  :dot		=> /\./,  
   :comma	=> /\,/,
   :infeq	=> /<=/,
   :supeq	=> />=/,
@@ -40,8 +73,7 @@ OBERON_TOKEN_DEF={
   :substract	=> /\-/,
   :tilde	=> /\~/,
   :hashtag	=> /\#/,
-  :const	=> /CONST|const/,
-   
+
   :plus		=> /\+/,
 
   :div		=> /div|DIV/,
@@ -58,7 +90,7 @@ class Parser
   attr_accessor :lexer
 
   def initialize
-    @lexer=Lexer.new(OBERON_TOKEN_DEF)
+    @lexer=Lexer.new(JAVASCRIPT_TOKEN_DEF)
   end
 
   def parse filename
