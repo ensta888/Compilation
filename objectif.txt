@@ -1,0 +1,1 @@
+Actually what we want to realisze is to build a compiler which can transfer the source code in Java into target language in Javascipt, futhermore it permits ease to create web page, which may contain elements of html, css, js and so on.
