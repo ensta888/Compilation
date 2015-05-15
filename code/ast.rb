@@ -72,13 +72,46 @@ end
 =begin
 TypeParameters:
 	< TypeParameterList >
+=end
+class TypeParameters < Ast
+	attr_accessor :typeParameterList
+	def initialize  typeParameterList = []
+		@typeParameterList = typeParameterList 
+	end
+end
+
+=begin
 TypeParameterList:
 	TypeParameter {, TypeParameter}
 =end
-class Class_Modifier < Ast
-	attr_accessor :name
-	def initialize modifier=nil
-		@name = modifier	
+class TypeParameterList < Ast
+	attr_accessor :typeParameter
+	def initialize  typeParameter = []
+		@typeParameter = typeParameter 
+	end
+end
+
+=begin
+typeParameter :
+	{TypeParameterModifier} Identifier [TypeBound]
+=end
+class TypeParameter < Ast
+	attr_accessor :typeParameterModifier, :ident, :typeBound
+	def initialize  typeParameterModifier=nil, ident=nil,  typeBound=nil
+		@typeParameterModifier = typeParameterModifier 
+		@ident = ident
+		@typeBound = typeBound
+	end
+end
+
+=begin
+typePrameterModifier:
+	Annotation 
+=end
+class TypeParameterModifier < Ast
+	attr_accessor :name 
+	def initialize  name=nil 
+		@name = name
 	end
 end
 
