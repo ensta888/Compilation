@@ -1,0 +1,10 @@
+																									class Declarations
+																									    (done)
+																								/                                              \
+																							 /                                                \
+															NormalClassDeclaration                              				EnumDeclaration
+																		(done)                                                     (done)
+             /     /       /           |           \               \            \
+						/			/				/					   |            \               \            \
+{ClassModifier} class Identifier [TypeParameters] [Superclass] [Superinterfaces] ClassBody
+   (done)     (keywd)

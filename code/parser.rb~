@@ -144,11 +144,9 @@ def classModifier
 		say "classModifier"
 		annotations=[:public,:protected,:private,:abstract,:static,:final]
     if annotations.include? showNext.kind
-      #node.operator=Operator.new(acceptIt)
+      node.operator=Operator.new(acceptIt)
     end
 end
-
-
   #=========== parse method relative to the grammar ========
  
 def parseModule
