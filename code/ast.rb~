@@ -163,6 +163,63 @@ class ClassMemberDeclaration < Ast
 end
 
 =begin
+FieldDeclaration:
+	{FieldModifier} UnannType VariableDeclaratorList ; 
+=end
+class FieldDeclaration < Ast
+	attr_accessor :filedModiferlist, :unannType, :varuableDeclaratorList
+	def initialize filedModiferlist = [], unannType = nil, varuableDeclaratorList = nil
+		@filedModiferlist, @unannType, @varuableDeclaratorlist = filedModiferlist, unannType, varuableDeclaratorList
+	end
+end
+
+=begin
+MethodDeclaration:
+	{MethodModifier} MethodHeader MethodBody 
+=end
+class MethodeDeclaration < Ast
+	attr_accessor :methodeModifierList, :methodHeader, :methodBody
+	def initialize methodeModifierList=[], methodHeader = nil, methodBody = nil
+			@methodeModifierList, @methodHeader, @methodBody = methodeModifierList, methodHeader, methodBody
+	end
+end
+
+=begin
+MethodModifier:
+(one of) Annotation:
+	public protected private abstract static final synchronized native strictfp 
+=end
+class MethodModifier < Ast
+	attr_accessor :name
+	def initialize name =nil
+		@name = name
+	end
+end
+
+=begin
+MethodHeader:
+	Result MethodDeclarator [Throws] TypeParameters {Annotation} Result MethodDeclarator [Throws] 
+=end
+class MethodHeader < Ast
+	attr_accessor :result, :methodDeclarator, :typeParameters, :annotationList, :result_throw, :methodDeclarator_throw
+	def initialize result = nil, methodDeclarator = nil, typeParameters = nil, annotationList = nil, result_throw = nil, methodDeclarator_throw = nil
+		@result, @methodDeclarator, @typeParameters, @annotationList, @result_throw, @methodDeclarator_throw	= result, methodDeclarator, typeParameters, annotationList, result_throw, methodDeclarator_throw
+	end
+end
+
+=begin
+MethodBody:
+	Block
+	; 
+=end
+class MethodBody < Ast
+	attr_accessor :block
+	def initialize block = nil
+			@block =block
+	end
+end
+
+=begin
 InstanceInitializer:
 	Block 
 =end
@@ -178,9 +235,33 @@ Block:
 	{ [BlockStatements] } 
 =end
 class Block < Ast
+	attr_accessor :blockStatements
+	def initialize blockStatements = nil 
+		@blockStatements = blockStatements
+	end
+end
+
+=begin
+BlockStatements:
+	BlockStatement {BlockStatement} 
+=end
+class BlockStatements < Ast
 	attr_accessor :blockStatement
-	def initialize blockStatement = nil 
+	def initialize blockStatement= nil
 		@blockStatement = blockStatement
+	end
+end
+
+=begin
+BlockStatement:
+	LocalVariableDeclarationStatement
+	ClassDeclaration
+Statement 
+=end
+class BlockStatement < Ast
+	attr_accessor :localVariableDeclarationStatement, :classDeclaration
+	def initialize localVariableDeclarationStatement=nil, classDeclaration=nil
+		@localVariableDeclarationStatement, @classDeclaration = localVariableDeclarationStatement, classDeclaration
 	end
 end
 
@@ -193,6 +274,17 @@ class StaticInitializer < Ast
 	def initilaize block = nil
 		@block = block
 	end 
+end
+
+=begin
+ConstructorDeclaration:
+	{ConstructorModifier} ConstructorDeclarator [Throws] ConstructorBody 
+=end
+class ConstructorDeclaration < Ast
+	attr_accessor :constructorModifier, :constructorDeclarator,  :constructorBody 
+	def initialize constructorModifier = nil, constructorDeclarator = nil,  constructorBody = nil
+		@constructorModifier, @constructorDeclarator,  @constructorBody = constructorModifier, constructorDeclarator,  constructorBody 	
+	end
 end
 
 =begin

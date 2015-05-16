@@ -1,6 +1,10 @@
 public class test{
-	 public void main(String args[]){
+<<<<<<< HEAD
+	 public static void main(String args[]){
 			int main=0;
 			System.out.println("main = "+main);
 		}
+=======
+
+>>>>>>> c5dd95a5e0e14215ff8a802c326a5010bfa7b447
 }

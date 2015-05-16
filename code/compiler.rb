@@ -21,11 +21,12 @@ class Compiler
     #generate_dot
   end
   
+=begin
   def simpleVisit
     visitor=Visitor.new
     visitor.doIt(@ast)
   end
-
+=end
   def generate_dot
     gen=DotGenerator.new
     gen.generate(@ast)
