@@ -17,15 +17,16 @@ class Compiler
     puts "==> compiling #{filename}"
     @ast=@parser.parse(filename)
     #pp ast
-    simpleVisit
-    generate_dot
+    #simpleVisit
+    #generate_dot
   end
   
+=begin
   def simpleVisit
     visitor=Visitor.new
     visitor.doIt(@ast)
   end
-
+=end
   def generate_dot
     gen=DotGenerator.new
     gen.generate(@ast)
