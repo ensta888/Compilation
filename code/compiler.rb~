@@ -33,5 +33,5 @@ class Compiler
 
 end
 
-compiler=Compiler.new # :parser=>:eleves
+compiler=Compiler.new :parser=>:eleves
 compiler.compile ARGV[0]

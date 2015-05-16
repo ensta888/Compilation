@@ -57,6 +57,7 @@ JAVA_TOKEN_DEF={
   :static  			=> /static|STATIC/,
   :super  			=> /super|SUPER/, 
   :switch  			=> /switch|SWITCH/, 
+	:strictfp			=> /strictfp|STRICTFP/,
   :synchronized => /synchronized|SYNCHRONIZED/,
 #T
   :this		  => /this|THIS/,
@@ -81,6 +82,8 @@ JAVA_TOKEN_DEF={
   :rbracket	=> /\)/,
   :lsbracket	=> /\[/,
   :rsbracket	=> /\]/,
+	:lbrace	=> /\{/,
+	:rbrace	=> /\}/,
   :assign	=> /:=/,
   :colon	=> /:/,
   :eq		=> /\=/,
@@ -95,8 +98,8 @@ JAVA_TOKEN_DEF={
   :mod		=> /mod|MOD/,
   :and		=> /\&/,
 
-  :ident	  => /[a-zA-Z][a-zA-Z0-9_]*/,
-  :integer	=> /[0-9]+/,
+  :identifier	  => /[a-zA-Z][a-zA-Z0-9_]*/,
+  :integer			=> /[0-9]+/,
 }
 
 class Parser
@@ -104,14 +107,14 @@ class Parser
   attr_accessor :lexer
 
   def initialize verbose=false
-    @lexer=Lexer.new(OBERON_TOKEN_DEF)
+    @lexer=Lexer.new(JAVA_TOKEN_DEF)
     @verbose=verbose
   end
 
   def parse filename
     str=IO.read(filename)
     @lexer.tokenize(str)
-    parseModule()
+    parseNormalClassDeclaration()
   end
 
   def expect token_kind
@@ -135,16 +138,100 @@ class Parser
     puts txt if @verbose
   end
   #=========== mon parse method relative to the grammar ========
-def classDeclaration
-	 	say "parseModule"
-	 	classModifier
+
+def parseNormalClassDeclaration
+	 	puts "parseNormalClassDeclaration"
+	 	parseClassModifier()
+		expect :class
+		expect :identifier
+		parseClassBody()
 end
 
-def classModifier 
-		say "classModifier"
-		annotations=[:public,:protected,:private,:abstract,:static,:final]
-    if annotations.include? showNext.kind
-      node.operator=Operator.new(acceptIt)
+def parseClassModifier 
+		puts "parseClassModifier"
+		annotations=[:public,:protected,:private,:abstract,:static,:final,:strictfp]
+    while annotations.include? showNext.kind
+      	acceptIt
+    end
+end
+=begin
+def parseTypeParameters
+		puts "parseTypeParameters"
+end
+=end
+
+def parseClassBody
+		puts "parseClassBody"
+		p expect :lbrace
+		parseClassBodyDeclaration()
+		expect :rbrace
+end
+
+def parseClassBodyDeclaration
+		puts "parseClassBodyDeclaration"
+	#	case showNext.kind
+	#	when :static then		
+	#		parseStaticInitializer()
+	#	else
+	#		raise "error"
+  #  end
+end
+
+=begin
+def parseClassMemberDeclaration
+		puts "parseClassMemberDeclaration"
+		case showNext.kind
+		when  then
+			parseFieldDeclaration()
+		when then		
+			parseMethodDeclaration()
+		when then		
+			parseClassDeclaration()
+		when then		
+			parseInterfaceDeclaration()		
+		else
+			raise "error"
+    end	
+end
+
+def parseInstanceInitializer
+		puts "parseInstanceInitializer"
+		parseBlock()
+end
+
+
+def parseStaticInitializer
+		puts "parseStaticInitializer"
+		expect :static
+		parseBlock()
+end
+
+def parseBlock
+		puts "parseBlock"
+		expect :lbrace
+		parseBlockStatements()
+		expect :rbrace
+end
+
+def parseBlockStatements()
+		puts "parseBlockStatements"
+		parseBlockStatement()
+		expect :lbrace
+		parseBlockStatement()
+		expect :rbrace
+end
+
+def parseBlockStatement
+		puts "parseBlockStatement"
+		case showNext.kind
+		when then
+			parseLocalVariableDeclarationStatement()
+		when then
+			parseNormalClassDeclaration()
+		when then
+			parseStatement()
+		else
+      raise "error"
     end
 end
   #=========== parse method relative to the grammar ========
@@ -523,6 +610,7 @@ def parseModule
    expect :rbracket
    return node
  end
+=end
   
 
  def parseProcedureCall(identifier,selector)
