@@ -22,7 +22,6 @@ end
 	Identifier:	
 		IdentifierChars but not a Keyword or BooleanLiteral or NullLiteral 
 =end
-
 class Identifier < Ast
   attr_accessor :name
   def initialize name=nil
@@ -35,10 +34,9 @@ class Identifier < Ast
 end
 
 =begin
-ClassDeclaration:
-	NormalClassDeclaration | EnumDeclaration
+	ClassDeclaration:
+		NormalClassDeclaration | EnumDeclaration
 =end
-
 class Class_declaration < Ast
   attr_accessor :nClsDcl, :enumClsDcl
   def initialize nClsDcl=nil, enumClsDcl=nil
@@ -47,8 +45,8 @@ class Class_declaration < Ast
 end
 
 =begin
-NormalClassDeclaration:
-	{ClassModifier} class Identifier [TypeParameters] [Superclass] [Superinterfaces] ClassBody 
+	NormalClassDeclaration:
+		{ClassModifier} class Identifier [TypeParameters] [Superclass] [Superinterfaces] ClassBody 
 =end
 class Normal_Class_Declaration < Ast
   attr_accessor :clsModif, :ident, :typeParms, :superCls, :superIntfs, :clsBody
@@ -58,9 +56,9 @@ class Normal_Class_Declaration < Ast
 end
 
 =begin
-ClassModifier:
-(one of) Annotation 
-	public protected private abstract static final strictfp 
+	ClassModifier:
+	(one of) Annotation 
+		public protected private abstract static final strictfp 
 =end
 class Class_Modifier < Ast
 	attr_accessor :name
@@ -70,10 +68,137 @@ class Class_Modifier < Ast
 end
 
 =begin
-EnumDeclaration:
-	{ClassModifier} enum Identifier [Superinterfaces] EnumBody 
+TypeParameters:
+	< TypeParameterList >
 =end
+class TypeParameters < Ast
+	attr_accessor :typeParameterList
+	def initialize  typeParameterList = []
+		@typeParameterList = typeParameterList 
+	end
+end
 
+=begin
+	TypeParameterList:
+		TypeParameter {, TypeParameter}
+=end
+class TypeParameterList < Ast
+	attr_accessor :typeParameter
+	def initialize  typeParameter = []
+		@typeParameter = typeParameter 
+	end
+end
+
+=begin
+	typeParameter :
+		{TypeParameterModifier} Identifier [TypeBound]
+=end
+class TypeParameter < Ast
+	attr_accessor :typeParameterModifier, :ident, :typeBound
+	def initialize  typeParameterModifier=nil, ident=nil,  typeBound=nil
+		@typeParameterModifier = typeParameterModifier 
+		@ident = ident
+		@typeBound = typeBound
+	end
+end
+
+=begin
+	typePrameterModifier:
+		Annotation 
+=end
+class TypeParameterModifier < Ast
+	attr_accessor :name 
+	def initialize  name=nil 
+		@name = name
+	end
+end
+
+#!!!------------------- TO DO ----------------------------
+=begin
+TypeBound:
+	extends TypeVariable
+	extends ClassOrInterfaceType {AdditionalBound} 
+=end
+class TypeBound < Ast
+end
+
+=begin
+ClassBody:
+ { {ClassBodyDeclaration} } 
+=end
+class ClassBody < Ast
+	attr_accessor :classBodyDeclaration
+	def initialize classBodyDeclaration = nil
+		@classBodyDeclaration = classBodyDeclaration
+	end
+end
+
+=begin
+ClassBodyDeclaration:
+	ClassMemberDeclaration
+	InstanceInitializer
+	StaticInitializer
+	ConstructorDeclaration 
+=end
+class ClassBodyDeclaration < Ast
+	attr_accessor :classMemberDeclaration, :instanceIntializer, :staricInitializer, :constructorDeclaration
+	def initialize classMemberDeclaration = nil, instanceIntializer = nil, staricInitializer = nil, constructorDeclaration = nil
+		@classMemberDeclaration, @instanceIntializer, @staricInitializer, @constructorDeclaration = classMemberDeclaration, instanceIntializer, staricInitializer, constructorDeclaration	
+	end
+end
+
+=begin
+ClassMemberDeclaration:
+	FieldDeclaration
+	MethodDeclaration
+	ClassDeclaration
+	InterfaceDeclaration
+; 
+=end
+class ClassMemberDeclaration < Ast
+	attr_accessor :fieldDeclaration, :methodDeclaration, :classDeclaration, :interfaceDeclaration
+	def initialize fieldDeclaration = nil, methodDeclaration = nil, classDeclaration = nil, interfaceDeclaration = nil
+		@fieldDeclaration, @methodDeclaration, @classDeclaration, @interfaceDeclaration = fieldDeclaration, methodDeclaration, classDeclaration, interfaceDeclaration	
+	end
+end
+
+=begin
+InstanceInitializer:
+	Block 
+=end
+class InstanceInitializer < Ast
+	attr_accessor :block
+	def initilaize block = nil
+		@block = block
+	end
+end
+
+=begin
+Block:
+	{ [BlockStatements] } 
+=end
+class Block < Ast
+	attr_accessor :blockStatement
+	def initialize blockStatement = nil 
+		@blockStatement = blockStatement
+	end
+end
+
+=begin
+StaticInitializer:
+	static Block 
+=end
+class StaticInitializer < Ast
+	attr_accessor :block
+	def initilaize block = nil
+		@block = block
+	end 
+end
+
+=begin
+	EnumDeclaration:
+		{ClassModifier} enum Identifier [Superinterfaces] EnumBody 
+=end
 class Enum_Declaration < Ast
   attr_accessor :clsModif, :ident, :superIntfs, :enumBody
   def initialize clsModif=nil, ident=nil, superIntfs=nil, enumBody=nil
