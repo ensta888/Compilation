@@ -17,8 +17,8 @@ class Compiler
     puts "==> compiling #{filename}"
     @ast=@parser.parse(filename)
     #pp ast
-    simpleVisit
-    generate_dot
+    #simpleVisit
+    #generate_dot
   end
   
   def simpleVisit

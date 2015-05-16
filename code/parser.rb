@@ -19,6 +19,7 @@ JAVA_TOKEN_DEF={
 	:catch    => /catch|CATCH/,
 	:char     => /char|CHAR/,
 	:class    => /class|CLASS/,
+	:const    => /const|CONST/,
 	:continue => /continue|CONTINUE/,
 #D
 	:d	      => /d|D/,
@@ -45,6 +46,7 @@ JAVA_TOKEN_DEF={
 #N
   :new					=> /new|NEW/,
   :null					=> /null|NULL/,
+	:native       => /native|NATIVE/,
 #P
   :package			=> /package|PACKAGE/,  
   :private			=> /private|PRIVATE/, 
@@ -62,8 +64,14 @@ JAVA_TOKEN_DEF={
 #T
   :this		  => /this|THIS/,
   :throw		=> /throw|THROW/, 
+  :throws		=> /throws|THROWS/, 
   :true  		=> /true|TRUE/,
   :try  		=> /try|TRY/,
+  :transient=> /transient|TRANTIENT/,
+#V
+  :void  		=> /void|VOID/,
+	:volatile => /volatile|VOLATILE/,
+
  #W
   :while	=> /WHILE|while/,
 
@@ -169,14 +177,151 @@ end
 
 def parseClassBodyDeclaration
 		puts "parseClassBodyDeclaration"
-	#	case showNext.kind
-	#	when :static then		
-	#		parseStaticInitializer()
-	#	else
-	#		raise "error"
-  #  end
+		parseClassMemberDeclaration()
+	
 end
 
+def parseClassMemberDeclaration
+		puts "parseClassMemberDeclaration"		
+		parseMethodDeclaration()	
+end
+
+def parseMethodDeclaration
+		puts "parseMethodDeclaration"
+		parseMethodModifier()
+		parseMethodHeader()
+		parseMethodBody()
+end
+#--1.methodModifier--
+def parseMethodModifier
+		puts "parseMethodModifier"
+		annotations=[:public,:protected,:private,:abstract,:static,:final,:strictfp,:synchronized,:native]
+    while annotations.include? showNext.kind
+      	acceptIt
+    end
+end
+
+#--2.methodHeader--
+def parseMethodHeader()
+		puts "parseMethodHeader"
+		parseResult()
+		parseMethodDeclarator()
+		parseThrow()
+end
+
+def parseResult
+		puts "parseResult"
+		expect :void
+end
+
+def parseMethodDeclarator
+		puts "parseMethodDeclarator"
+		expect :identifier
+		expect :lbracket
+		parseFormalParameterList()
+		expect :rbracket
+end
+
+def parseFormalParameterList
+		puts "parseFormalParameterList"
+		parseFormalParameters()
+end
+
+def parseFormalParameters
+		puts "parseFormalParameters"
+		parseFormalParameter()		
+end
+
+def parseFormalParameter
+		puts "parseFormalParameter"
+		parseUnannType()
+		parseVariableDeclaratorId()
+end
+
+def parseUnannType
+		puts "parseUnannType"
+		parseUnannClassType()
+end
+
+def parseUnannClassType
+		puts "parseUnannClassType"
+		expect :identifier
+		
+end
+
+def parseVariableDeclaratorId
+		puts "parseVariableDeclaratorId"
+		expect :identifier
+		expect :lsbracket
+		expect :rsbracket
+end
+
+def parseFormalParameter
+		puts "parseFormalParameter"
+		
+end
+
+#--3.methodBody--
+def parseMethodBody
+		puts "parseMethodBody"
+		parseBlock()
+		expect :semicolon
+end
+
+def parseBlock
+		puts "parseBlock"
+		expect :lbrace
+		parseBlockStatements()
+		expect :rbrace
+end
+
+def parseBlockStatements()
+		puts "parseBlockStatements"
+		parseBlockStatement()
+		expect :lbrace
+		parseBlockStatement()
+		expect :rbrace
+end
+
+def parseBlockStatement
+		puts "parseBlockStatement"
+		parseStatement()
+end
+
+def parseStatement
+		puts "parseStatement"
+		parseExpressionStatement()
+end
+
+def parseExpressionStatement
+		puts "parseExpressionStatement"
+		parseStatementExpression()
+end
+
+def parseStatementExpression
+		puts "parseStatementExpression"
+		parseMethodInvocation()
+end
+
+def parseMethodInvocation
+		puts "parseMethodInvocation"
+		parseTypeName()
+		expect :dot
+		expect :identifier
+		expect :lbracket
+		parseArgumentList()
+		expect :rbracket
+end
+
+def parseTypeName
+		puts "parseTypeName"
+		expect :identifier
+end
+
+def parseArgumentList
+		puts "parseArgumentList"
+
+end
 =begin
 def parseClassMemberDeclaration
 		puts "parseClassMemberDeclaration"
