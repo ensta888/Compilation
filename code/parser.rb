@@ -419,4 +419,48 @@ statement
 				acceptIt
 			end
 
+=begin
+variable_declaration 
+      { modifier } type variable_declarator { "," variable_declarator } ";" 
+=end
+	def parseVariableDeclaration
+			puts "parseVariableDeclaration"
+			#to complete condition while
+			while 
+				parseModifier()
+			end
+			parseType()
+			parseVariableDeclarator()
+			while showNext.kind== :comma
+				acceptIt
+				parseVariableDeclarator()
+			end
+			expect :semicolon
+	end
+
+=begin
+variable_declarator 
+      identifier { "[" "]" } [ "=" variable_initializer ] 
+=end
+	def parseVariableDeclarator
+			puts "parseVariableDeclarator"
+			expect :ident
+			while showNext.kind== :lsbracket
+				acceptIt
+				expect :rsbracket
+			end
+			if showNext.kind== :eq
+				acceptIt
+				parseVariableInitializer() 
+			end
+	end
+
+=begin
+variable_initializer 
+      expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
+=end
+
+	def parseVariableInitializer
+			puts "parseVariableInitializer"
+	end
 end
