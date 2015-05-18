@@ -93,7 +93,7 @@ JAVA_TOKEN_DEF={
 	:lbrace	=> /\{/,
 	:rbrace	=> /\}/,
   :assign	=> /:=/,
-  :colon	=> /:/,
+  :colon	=> /\:/,
   :eq		=> /\=/,
   :multiply	=> /\*/,
   :substract	=> /\-/,
@@ -322,6 +322,7 @@ type_specifier
 =end
 	def parseTypeSpecifier
 			puts "parseTypeSpecifier"
+#to complete class_name |interface_name
 			types=[:boolean,:byte,:char,:short,:int,:float,:long,:double]
 		  while types.include? showNext.kind
 		    	acceptIt
@@ -335,9 +336,87 @@ statement_block
 	def parseStatementBlock
 		puts "parseStatementBlock"
 		expect :lbrace
+		#to complete condition while
 		while 
 			parseStatement()
 		end
 		expect :rbrace
 	end
+
+=begin
+statement 
+      variable_declaration | ( expression ";" ) | ( statement_block ) | ( if_statement ) | ( do_statement ) 
+			| ( while_statement ) | ( for_statement ) | ( try_statement ) |( switch_statement ) 
+      | ( "synchronized" "(" expression ")" statement ) | ( "return" [ expression ] ";" ) | ( "throw" expression ";" ) 
+			| ( identifier ":" statement ) | ( "break" [ identifier ] ";" ) | ( "continue" [ identifier ] ";" ) | ( ";" )
+=end
+	def parseStatement
+			puts "parseStatement"
+			a=parseModifier()
+		  case showNext.kind
+			#not sure for definit variable_declaration
+			when a==2 then
+				acceptIt
+			#to complete the condition when for ( expression ";" )
+			when then
+				parseExpression()
+				expect :semicolon
+			when :lbrace then
+				acceptIt
+				parseIfStatementBlock()
+			when :if then
+				acceptIt
+				parseIfStatement()
+			when :do then
+				acceptIt
+				parseDoStatement()
+			when :while then
+				acceptIt
+				parseWhileStatement()
+			when :for then
+				acceptIt
+				parseForStatement()
+			when :try then
+				acceptIt
+				parseTryStatement()
+			when :switch then
+				acceptIt
+				parseSwitchStatement() 
+		  when :synchronized then
+		    acceptIt
+		    expect :lbracket
+				parseExpression()
+		    expect :rbracket
+				parseStatement()
+		  when :return then
+		    acceptIt
+				#to complete condition if
+				if
+					parseExpression()
+				end
+				expect :semicolon
+		  when :throw then
+		    acceptIt
+				parseExpression()
+				expect :semicolon
+		  when :ident then
+		    acceptIt
+				expect :colon
+				parseStatement()
+		  when :break then
+				acceptIt
+				if showNext.kind== :ident
+					acceptIt
+				end
+				expect :semicolon
+		  when :continue then
+				acceptIt
+				if showNext.kind== :ident
+					acceptIt
+				end
+				expect :semicolon
+			when :semicolon then
+				acceptIt
+			end
+
 end
