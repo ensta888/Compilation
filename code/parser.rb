@@ -224,7 +224,7 @@ field_declaration
 							when :static
 								acceptIt
 								parseStaticInitialiser()
-							end
+					end
 			end
 		# ( method_declaration | constructor_declaration | variable_declaration )
 			while true
@@ -237,7 +237,7 @@ field_declaration
 						parseConstructorDeclaration()
 					end		
 					if a==1
-						parsemethodDeclaration()
+						parseMethodDeclaration()
 					end
 					if a==2
 						parseVariableDeclaration()
@@ -248,8 +248,8 @@ field_declaration
 methodDeclaration   
 	    { modifier } type ident "(" [ parameter_list ] ")" { "[" "]" }( statement_block | ";" ) 
 =end
-	def parsemethodDeclaration
-			puts "parsemethodDeclaration"
+	def parseMethodDeclaration
+			puts "parseMethodDeclaration"
 			a=parseModifier()
 			while a==2
 				parseType()

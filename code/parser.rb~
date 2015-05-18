@@ -224,7 +224,7 @@ field_declaration
 							when :static
 								acceptIt
 								parseStaticInitialiser()
-							end
+					end
 			end
 		# ( method_declaration | constructor_declaration | variable_declaration )
 			while true
@@ -357,7 +357,7 @@ statement
 			#not sure for definit variable_declaration
 			when a==2 then
 				acceptIt
-			#to complete ( expression ";" )
+			#to complete the condition when for ( expression ";" )
 			when then
 				parseExpression()
 				expect :semicolon
