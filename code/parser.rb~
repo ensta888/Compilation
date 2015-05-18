@@ -146,22 +146,100 @@ class Parser
     puts txt if @verbose
   end
   #=========== mon parse method relative to the grammar ========
-
-def parseNormalClassDeclaration
-	 	puts "parseNormalClassDeclaration"
-	 	parseClassModifier()
+=begin
+	class_declaration 
+      ::= 
+      { modifier } "class" identifier [ "extends" super_class_name ] [ "implements" interface_name { "," interface_name } ] "{" { field_declaration } "}" 
+=end
+def parseClassDeclaration
+	 	puts "parseClassDeclaration"
+	 	parseModifier()
 		expect :class
 		expect :identifier
-		parseClassBody()
+    if showNext.kind==:extends
+      acceptIt
+      parseSuperClassName()
+    end
+    if showNext.kind==:implements
+      acceptIt
+     	parseInterfaceName()
+			while showNext.kind==:comma
+				acceptIt
+				parseInterfaceName()
+			end
+    end		
+		expect :lbrace
+		parseFieldDeclaration()
+		expect :rbrace
+		#parseClassBody()
 end
 
-def parseClassModifier 
-		puts "parseClassModifier"
+=begin
+if class modifier , all  return 1
+if var modifier , except :abstract return 2
+else return 0 error
+=end
+def parseModifier 
+		puts "parseModifier"
 		annotations=[:public,:protected,:private,:abstract,:static,:final,:strictfp]
     while annotations.include? showNext.kind
       	acceptIt
     end
 end
+
+=begin
+	SuperClassName::= identifer{"."identifier}
+=end
+def parseSuperClassName()
+		puts "parseSuperClassName"
+		expect :identifier
+		while showNext.kind== :dot
+			acceptIt
+			expect :identifier
+		end
+end
+
+=begin
+	InterfaceClassName::= identifer{"."identifier}
+=end
+def parseInterfaceName()
+		puts "parseInterfaceClassName"
+		expect :identifier
+		while showNext.kind== :dot
+			acceptIt
+			expect :identifier
+		end
+end
+
+=begin
+field_declaration 
+   ( method_declaration | constructor_declaration | variable_declaration )  | static_initializer | ";" 
+=end
+def parseFieldDeclaration()
+# static_initializer | ";" 
+	while showNext.kind== :semicolon or showNext.kind==:static 
+		case showNext.kind
+      when :semicolon
+        acceptIt
+      when :static
+        acceptIt
+        parseStaticInitialiser()
+      end
+	end
+# ( method_declaration | constructor_declaration | variable_declaration )
+	while true
+		a=parseModifier()
+		if a==0
+			break
+		end
+
+		if expect(:ident).kind==:ident
+		end
+		
+	end 
+	
+end
+
 =begin
 def parseTypeParameters
 		puts "parseTypeParameters"
@@ -307,6 +385,7 @@ def parseMethodInvocation
 		puts "parseMethodInvocation"
 		parseTypeName()
 		expect :dot
+		if 
 		expect :identifier
 		expect :lbracket
 		parseArgumentList()
@@ -320,7 +399,10 @@ end
 
 def parseArgumentList
 		puts "parseArgumentList"
+		
 end
+
+
 =begin
 def parseClassMemberDeclaration
 		puts "parseClassMemberDeclaration"
