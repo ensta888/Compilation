@@ -457,9 +457,7 @@ variable_declarator
 
 =begin
 variable_initializer 
-      expression 
-      | ( "{" [ variable_initializer 
-      { "," variable_initializer } [ "," ] ] "}" ) 
+      expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
 =end
 
 	def parseVariableInitializer
