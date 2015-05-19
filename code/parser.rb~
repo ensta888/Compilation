@@ -224,7 +224,7 @@ field_declaration
 							when :static
 								acceptIt
 								parseStaticInitialiser()
-							end
+					end
 			end
 		# ( method_declaration | constructor_declaration | variable_declaration )
 			while true
