@@ -122,7 +122,7 @@ class Parser
   def parse filename
     str=IO.read(filename)
     @lexer.tokenize(str)
-    parseNormalClassDeclaration()
+    parseClassDeclaration()
   end
 
   def expect token_kind
@@ -171,7 +171,6 @@ class Parser
 			expect :lbrace
 			parseFieldDeclaration()
 			expect :rbrace
-			#parseClassBody()
 	end
 
 =begin

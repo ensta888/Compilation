@@ -122,7 +122,7 @@ class Parser
   def parse filename
     str=IO.read(filename)
     @lexer.tokenize(str)
-    parseNormalClassDeclaration()
+    parseClassDeclaration()
   end
 
   def expect token_kind
@@ -237,7 +237,7 @@ field_declaration
 						parseConstructorDeclaration()
 					end		
 					if a==1
-						parsemethodDeclaration()
+						parseMethodDeclaration()
 					end
 					if a==2
 						parseVariableDeclaration()
@@ -248,8 +248,8 @@ field_declaration
 methodDeclaration   
 	    { modifier } type ident "(" [ parameter_list ] ")" { "[" "]" }( statement_block | ";" ) 
 =end
-	def parsemethodDeclaration
-			puts "parsemethodDeclaration"
+	def parseMethodDeclaration
+			puts "parseMethodDeclaration"
 			a=parseModifier()
 			while a==2
 				parseType()
@@ -457,9 +457,7 @@ variable_declarator
 
 =begin
 variable_initializer 
-      expression 
-      | ( "{" [ variable_initializer 
-      { "," variable_initializer } [ "," ] ] "}" ) 
+      expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
 =end
 
 	def parseVariableInitializer
