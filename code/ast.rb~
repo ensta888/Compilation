@@ -38,10 +38,17 @@ end
       ::= 
       { modifier } "class" identifier [ "extends" super_class_name ][ "implements" interface_name { "," interface_name } ] "{" { field_declaration } "}" 
 =end
-class Class_Declaration < Ast
-  attr_accessor :clsModif, :ident, :clsName, :interfName, :fieldDeclar
-  def initialize clsModif=nil, ident=nil, clsName=nil, interfName=nil, fieldDeclar=nil
-		@clsModif=clsModif, @ident=ident, @clsName=clsName, @interfName=interfName, @fieldDeclar=fieldDeclar
+class ClassDeclaration < Ast
+  attr_accessor :classModifs, :ident, :clsName, :interfName, :fieldDeclar
+  def initialize classModifs=[], ident=nil, clsName=nil, interfName=nil, fieldDeclar=nil
+		@classModifa=classModifs, @ident=ident, @clsName=clsName, @interfName=interfName, @fieldDeclar=fieldDeclar
+	end
+end
+
+class Modifiers < Ast
+	attr_accessor :list
+	def initialize list = []
+		@list = list
 	end
 end
 
@@ -60,20 +67,27 @@ end
 =begin
 	SuperClassName::= identifer{"."identifer}
 =end
-class Super_Class_Name < Ast
-	attr_accessor :ident
-	def initialize  ident=nil
-		@ident=ident 
+class SuperClassName < Ast
+	attr_accessor :list
+	def initialize  list=[]
+		@list=list
+	end
+end
+
+class InterfaceNames < Ast
+	attr_accessor :interfaceList
+	def initialize  interfaceList=[]
+		@interfaceList=interfaceList
 	end
 end
 
 =begin
 	InterfaceClassName::= identifer{"."ident}
 =end
-class Interface_name < Ast
-	attr_accessor :ident
-	def initialize  ident=nil
-		@ident=ident 
+class InterfaceName < Ast
+	attr_accessor :identList
+	def initialize  identList=nil
+		@identList= identList
 	end
 end
 
@@ -155,10 +169,10 @@ end
 statement_block 
      "{" { statement } "}" 
 =end
-class Statement_block < Ast
-	attr_accessor :statement
-	def initialize statement = nil
-		@statement=statement
+class StatementBlock < Ast
+	attr_accessor :list
+	def initialize list = []
+		@list=list
 	end
 end
 
@@ -196,5 +210,16 @@ class Variable_declarator < Ast
 	attr_accessor :ident, :variable_initializer
 	def initialize variable_initializer =nil, ident=nil
 		@variable_initializer, @ident= variable_initializer, ident
+	end
+end
+
+=begin
+variable_initializer 
+      expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
+=end
+class variable_initializer < Ast
+	attr_accessor :expression, :variable_initializer
+	def initialize expression =nil, variable_initializer=nil
+		 @variable_initializer,@expression= variable_initializer, expression
 	end
 end

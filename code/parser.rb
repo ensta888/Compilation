@@ -85,6 +85,8 @@ JAVA_TOKEN_DEF={
   :supeq	=> />=/,
   :sup		=> />/,
   :inf		=> /</,
+	:2eq		=> /==/,
+	:noeq		=> /!=/,		
   
   :lbracket	=> /\(/,
   :rbracket	=> /\)/,
@@ -97,14 +99,23 @@ JAVA_TOKEN_DEF={
   :eq		=> /\=/,
   :multiply	=> /\*/,
   :substract	=> /\-/,
+  :2substract	=> /--/,
+  :substractEq => /-=/,
+	:2plus => /++/,
   :tilde	    => /\~/,
   :hashtag	  => /\#/,
-   
+  :eq    =>   /\=/,
   :plus		=> /\+/,
-  :div		=> /div|DIV/,
+	:plusEq => /+=/,
+	:mul    => /*/,
+	:mulEq  => /*=/,
+  :div		=> /\//,
+
   :or		  => /or|OR/,
-  :mod		=> /mod|MOD/,
+  :mod		=> /\%/,
+  :modEq  => /%=/,
   :and		=> /\&/,
+:div, :divEq
 
   :ident	  => /[a-zA-Z][a-zA-Z0-9_]*/,
   :integer			=> /[0-9]+/,
@@ -321,7 +332,7 @@ end
 parameter_list  
 	    parameter { "," parameter } 
 =end
-	def parseParameter
+	def parseParameterList
 			puts "parseParameter"
 			parseParameter()
 			while showNext.kind== :comma
@@ -463,7 +474,7 @@ statement
 			when :semicolon then
 				acceptIt
 			end
-
+	end
 =begin
 variable_declaration 
       { modifier } type variable_declarator { "," variable_declarator } ";" 
@@ -509,3 +520,321 @@ variable_initializer
 			puts "parseVariableInitializer"
 	end
 end
+
+=begin
+constructor_declaration 
+      ::= 
+      { modifier } identifier "(" [ parameter_list ] ")" 
+      statement_block 
+=end
+	def parseConstructorDeclaration
+			puts "parseConstructorDeclaration"
+			modifs=Modifiers.new
+			modifs=parseModifiers()
+			expect :ident
+			expect :lbracket
+			parseParameterList()
+			expect :rbracket
+			parseStatementBlock()
+	end
+
+=begin
+expression 
+      ::= 
+      numeric_expression 
+      | testing_expression | logical_expression | string_expression | bit_expression 
+      | casting_expression | creating_expression | literal_expression | "null" 
+      | "super" | "this" | identifier | ( "(" expression ")" ) | ( expression ( ( "(" [ arglist ] ")" ) 
+      | ( "[" expression "]" ) | ( "." expression ) | ( "," expression ) 
+      | ( "instanceof" ( class_name | interface_name ) ) ) ) 
+=end
+	def parseExpression
+			puts "parseExpression"
+			case showNext.kind
+			when :null then
+				acceptIt
+			when :super then
+				acceptIt
+			when :this then
+				acceptIt
+			when :ident then
+				acceptIt
+			when :lbracket then
+				acceptIt
+				parseExpression()
+				expect :rbracket
+			when :lbracket then
+				acceptIt
+			#to complete
+				if 
+					parseArglist()
+				end
+				expect :rbracket
+			when :lsbracket then
+				acceptIt
+				parseExpression()
+				expect :rsbracket
+			when :dot then
+				acceptIt
+				parseExpression()
+			when :comma then
+				acceptIt
+				parseExpression()
+			when :instanceof then
+				acceptIt
+				parseSuperClassName()
+			#to complete
+				parseInterfaceName()
+			end
+			#to complete
+			when
+	end
+
+=begin
+arglist 
+expression { "," expression } 
+=end
+	def parseArglist
+			puts "parseArglist"
+			parseExpression()
+			while showNext.kind == :comma
+				acceptIt
+				parseExpression()
+			end
+	end
+
+=begin
+numeric_expression  
+      ( ( "-" | "++" | "--" ) expression ) 
+      | ( expression ( "++" | "--" ) ) 
+      | ( expression ( "+" | "+=" | "-" | "-=" | "*" 
+      | "*=" | "/" | "/=" | "%" | "%=" ) expression ) 
+=end
+	def parseNumericExpression
+			numE1=[:substract, :2plus,:2substract]
+		  if numE.include? showNext.kind
+		    	acceptIt
+					parseExpression()
+		  end
+			parseExpression()	
+			numE2=[:2plus,:2substract]
+		  if numE.include? showNext.kind
+		    	acceptIt	
+		  end
+
+			parseExpression()	
+			numE3=[:plus,:plusEq,:substract, :substractEq, :mul, :mulEq, :div, :div:Eq, :mod, :modEq]
+		  if numE.include? showNext.kind
+		    	acceptIt		
+		  end
+			parseExpression()
+	end
+
+=begin
+testing_expression 
+      ( expression ( ">" | "<" | ">=" 
+      | "<=" | "==" | "!=" ) expression ) 
+=end 
+	def	parseTestingExpression
+			puts "parseTestingExpression"
+			parseExpression()	
+			tE=[:sup, :inf, :supeq, :infeq, :2eq, :noeq]
+		  if numE.include? showNext.kind
+		    	acceptIt		
+		  end
+			parseExpression()
+	end	
+
+=begin
+logical_expression 
+      ::= 
+      ( "!" expression ) 
+      | ( expression 
+      ( "ampersand" 
+      | "ampersand=" 
+      | "|" 
+      | "|=" 
+      | "^" 
+      | "^=" 
+      | ( "ampersand" "ampersand" ) 
+      | "||=" 
+      | "%" 
+      | "%=" ) 
+      expression ) 
+      | ( expression "?" expression ":" expression ) 
+      | "true" 
+      | "false" 
+=end
+	def parseLogicalExpression
+			puts "parseLogicalExpression"
+			
+	end
+
+=begin
+string_expression 
+( expression ( "+" | "+=" ) expression ) 
+=end
+	def parseStringExpression
+			puts "parseStringExpression"
+			parseExpression()
+			if :plus
+				acceptIt
+			else :plusEq
+				acceptIt
+			end
+			parseExpression()
+	end
+
+=begin
+casting_expression 
+"(" type ")" expression 
+=end
+	def parseCastingExpression
+			puts "parseCastingExpression"
+			expect :lbracket
+			parseType()
+			expect :rbracket
+			parseExpression()
+	end
+
+=begin
+literal_expression 
+      ::= 
+      integer_literal 
+      | float_literal 
+      | string 
+      | character 
+=end
+	def parseLiteralExpression
+			puts "parseLiteralExpression"
+			#to complete
+			parseIntLiteral()
+			parseFloatLiteral()
+      parseString()
+ 			parseCharacter 
+	end
+
+
+=begin
+if_statement 
+      "if" "(" expression ")" statement [ "else" statement ] 
+=end
+	def parseIfStatement
+			puts "parseIfStatement"
+			expect :if
+			expect :lbracket
+			parseExpression()
+			expect :rbracket	
+			parseStatement()
+			if showNext.kind== :else
+					acceptIt
+					parseStatement()
+			end
+	end
+
+=begin
+do_statement 
+      "do" statement "while" "(" expression ")" ";" 
+=end
+	def parseDoStatement
+			puts "parseDoStatement"
+			expect :do
+			parseStatement()
+			expect :while
+			expect :lbracket
+			parseExpression()
+			expect :rbracket	
+			expect :semicolon
+	end
+
+=begin
+while_statement 
+      "while" "(" expression ")" statement 
+=end
+	def parseWhileStatement
+			puts "parseWhileStatement"
+			expect :while
+			expect :lbracket
+			parseExpression()
+			expect :rbracket	
+			parseStatement()
+	end
+
+=begin
+for_statement 
+      "for" "(" ( variable_declaration | ( expression ";" ) | ";" ) 
+      [ expression ] ";" [ expression ] ";" ")" statement 
+=end
+	def parseForStatement
+			puts "parseForStatement"
+			expect :for
+			expect :lbracket
+
+			parseVariableDeclaration()
+			parseExpression()
+			expect :semicolon
+			expect :semicolon
+
+			if showNext.kind != :semicolon
+					acceptIt
+					parseExpression()
+			end
+			expect :semicolon
+	
+			if showNext.kind != :semicolon
+					acceptIt
+					parseExpression()
+			end
+			expect :semicolon
+
+			expect :rbracket	
+			parseStatement()
+	end
+
+=begin
+try_statement 
+      "try" statement { "catch" "(" parameter ")" statement } [ "finally" statement ] 
+=end
+	def parseTryStatement
+			puts "parseTryStatement"
+			expect :try
+			parseStatement()
+			while showNext.kind == :catch
+				acceptIt
+				expect :lbracket
+				parseParameter()
+				expect :rbracket
+				parseStatement()
+			end
+			if showNext.kind == :finally
+				acceptIt
+				parseStatement()
+			end
+	end
+
+=begin
+switch_statement 
+"switch" "(" expression ")" "{" { ( "case" expression ":" ) | ( "default" ":" ) | statement } "}" 
+=end
+	def parseSwitchStatement
+			puts "parseSwitchStatement"
+			expect :switch
+			expect :lbracket
+			parseExpression()
+			expect :rbracket
+			expect :lbrace
+			while showNext.kind == :case or :default
+				case showNext.kind
+				when :case then
+					acceptIt
+					parseExpression()
+					expect :colon					
+				when :default then
+					acceptIt
+					expect :colon
+				when then
+					parseStatement()
+				end
+			end
+	end
+

@@ -95,7 +95,7 @@ end
 field_declaration 
 	 ( method_declaration | constructor_declaration | variable_declaration )  | static_initializer | ";" 
 =end
-class Field_declaration < Ast
+class FieldDeclaration < Ast
 	attr_accessor :method_declaration, :constructor_declaration, :variable_declaration, :static_initializer
 	def initialize  method_declaration=nil, constructor_declaration=nil,  variable_declaration=nil, static_initializer=nil
 		@method_declaration =  method_declaration 
@@ -109,7 +109,7 @@ end
 methodDeclaration   
 	    { modifier } type identtifier "(" [ parameter_list ] ")" { "[" "]" }( statement_block | ";" ) 
 =end
-class Method_Declaration < Ast
+class MethodDeclaration < Ast
 	attr_accessor :modifier, :type, :ident, :parameterList, :statementBlock
 	def initialize  modifier=nil, type=nil, ident=nil, parameterList=nil, statementBlock=nil
 		@modifier = modifier
@@ -124,7 +124,7 @@ end
 parameter_list  
 	    parameter { "," parameter } 
 =end
-class Parameter_list < Ast
+class ParameterList < Ast
 	attr_accessor :parameter
 	def initialize parameter=nil
 		@parameter = parameter
@@ -158,7 +158,7 @@ end
 type_specifier 
       "boolean" | "byte" | "char" | "short" | "int" | "float" | "long" | "double" | class_name |interface_name 
 =end
-class Type_specifier < Ast
+class TypeSpecifier < Ast
 	attr_accessor :name
 	def initialize typeS=nil
 		@name = typeS	
@@ -195,7 +195,7 @@ end
 variable_declaration 
       { modifier } type variable_declarator { "," variable_declarator } ";" 
 =end
-class Variable_declaration < Ast
+class VariableDeclaration < Ast
 	attr_accessor :modifier, :type, :variableDeclarator
 	def initialize modifier =nil, type=nil, variableDeclarator=nil
 		@modifier,@type,@variableDeclarator =modifier, type, variableDeclarator
@@ -206,7 +206,7 @@ end
 variable_declarator 
       identifier { "[" "]" } [ "=" variable_initializer ] 
 =end
-class Variable_declarator < Ast
+class VariableDeclarator < Ast
 	attr_accessor :ident, :variable_initializer
 	def initialize variable_initializer =nil, ident=nil
 		@variable_initializer, @ident= variable_initializer, ident
@@ -217,7 +217,7 @@ end
 variable_initializer 
       expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
 =end
-class variable_initializer < Ast
+class VariableInitializer < Ast
 	attr_accessor :expression, :variable_initializer
 	def initialize expression =nil, variable_initializer=nil
 		 @variable_initializer,@expression= variable_initializer, expression
