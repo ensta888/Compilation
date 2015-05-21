@@ -164,11 +164,8 @@ class Parser
 		  end
 		  if showNext.kind==:implements
 		    acceptIt
-		   	parseInterfaceName()
-				while showNext.kind==:comma
-					acceptIt
-					parseInterfaceName()
-				end
+				interfs= InterfaceNames.new
+		   	interfs= parseInterfaceNames()
 		  end		
 			expect :lbrace
 			parseFieldDeclaration()
@@ -223,15 +220,30 @@ else return 0 error
 	end
 
 =begin
+	InterfaceNames
+=end
+	def parseInterfaceNames()
+		interfs= InterfaceNames.new
+		interfs.list << parseInterfaceName()
+		while showNext.kind==:comma
+					acceptIt
+					interfs.list << parseInterfaceName()
+		end
+		return interfs
+	end
+
+=begin
 	InterfaceClassName::= identifer{"."ident}
 =end
 	def parseInterfaceName()
 			puts "parseInterfaceClassName"
-			expect :ident
+			interf= InterfaceName.new
+			interf.list << expect :ident
 			while showNext.kind== :dot
 				acceptIt
-				expect :ident
+				interf.list << expect :ident
 			end
+			return interf
 	end
 
 =begin
@@ -242,11 +254,11 @@ field_declaration
 	# static_initializer | ";" 
 			while showNext.kind== :semicolon or showNext.kind==:static 
 					case showNext.kind
-							when :semicolon
+							when :semicolon then
 								acceptIt
-							when :static
+							when :static then
 								acceptIt
-								parseStaticInitialiser()
+								parseStaticInitializer()
 					end
 			end
 		# ( method_declaration | constructor_declaration | variable_declaration )
@@ -294,6 +306,16 @@ methodDeclaration
 				end
 			end
 	end
+
+=begin
+	StaticInitializer ::= "static" statement_block
+=end
+def parseStaticInitializer
+	expect :static
+	stblok= StatementBlock.new
+	stblock= parseStatementBlock()
+	return stblock
+end
 
 =begin
 parameter_list  

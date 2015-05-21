@@ -74,13 +74,20 @@ class SuperClassName < Ast
 	end
 end
 
+class InterfaceNames < Ast
+	attr_accessor :interfaceList
+	def initialize  interfaceList=[]
+		@interfaceList=interfaceList
+	end
+end
+
 =begin
 	InterfaceClassName::= identifer{"."ident}
 =end
-class Interface_name < Ast
-	attr_accessor :ident
-	def initialize  ident=nil
-		@ident=ident 
+class InterfaceName < Ast
+	attr_accessor :identList
+	def initialize  identList=nil
+		@identList= identList
 	end
 end
 
@@ -162,10 +169,10 @@ end
 statement_block 
      "{" { statement } "}" 
 =end
-class Statement_block < Ast
-	attr_accessor :statement
-	def initialize statement = nil
-		@statement=statement
+class StatementBlock < Ast
+	attr_accessor :list
+	def initialize list = []
+		@list=list
 	end
 end
 
