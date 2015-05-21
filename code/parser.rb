@@ -153,12 +153,14 @@ class Parser
 =end
 	def parseClassDeclaration
 		 	puts "parseClassDeclaration"
-		 	parseModifier()
+		 	clsDecl = ClassDeclaration.new
+			clsDecl.classModifs=parseModifiers()
 			expect :class
 			expect :ident
 		  if showNext.kind==:extends
 		    acceptIt
-		    parseSuperClassName()
+		    superClass= SuperClassName.new
+		    superClass= parseSuperClassName()
 		  end
 		  if showNext.kind==:implements
 		    acceptIt
@@ -171,6 +173,16 @@ class Parser
 			expect :lbrace
 			parseFieldDeclaration()
 			expect :rbrace
+	end
+
+	def parseModifiers
+		puts "parseModifiers"
+		modifs=Modifiers.new
+		annotations=[:public,:protected,:private,:abstract,:static,:final,:strictfp]
+		while annotations.include? showNext.kind
+			modifs.list << parseModifer()
+		end
+		return modifs
 	end
 
 =begin
@@ -190,11 +202,10 @@ else return 0 error
       | "transient" 
 =end
 	def parseModifier 
-			puts "parseModifier"
-			annotations=[:public,:protected,:private,:abstract,:static,:final,:strictfp]
-		  while annotations.include? showNext.kind
-		    	acceptIt
-		  end
+		puts "parseModifier"
+		modif=Modifer.new    
+		modif.name=acceptIt
+		return modif
 	end
 
 =begin
@@ -202,11 +213,13 @@ else return 0 error
 =end
 	def parseSuperClassName()
 			puts "parseSuperClassName"
-			expect :ident
+			superClass=SuperClassName.new
+			superClass.list << expect :ident
 			while showNext.kind== :dot
 				acceptIt
-				expect :ident
+				superClass << expect :ident
 			end
+			return superClass
 	end
 
 =begin

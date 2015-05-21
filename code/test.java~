@@ -1,10 +1,13 @@
 public class test{
-<<<<<<< HEAD
+
+	int a=1;
+
+	int getA(){
+		return a;
+	}	
 	 public static void main(String args[]){
 			int main=0;
-			System.out.println("main = "+main);
+			System.out.println("a = "+main);
 		}
-=======
 
->>>>>>> c5dd95a5e0e14215ff8a802c326a5010bfa7b447
 }

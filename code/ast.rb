@@ -38,10 +38,17 @@ end
       ::= 
       { modifier } "class" identifier [ "extends" super_class_name ][ "implements" interface_name { "," interface_name } ] "{" { field_declaration } "}" 
 =end
-class Class_Declaration < Ast
-  attr_accessor :clsModif, :ident, :clsName, :interfName, :fieldDeclar
-  def initialize clsModif=nil, ident=nil, clsName=nil, interfName=nil, fieldDeclar=nil
-		@clsModif=clsModif, @ident=ident, @clsName=clsName, @interfName=interfName, @fieldDeclar=fieldDeclar
+class ClassDeclaration < Ast
+  attr_accessor :classModifs, :ident, :clsName, :interfName, :fieldDeclar
+  def initialize classModifs=[], ident=nil, clsName=nil, interfName=nil, fieldDeclar=nil
+		@classModifa=classModifs, @ident=ident, @clsName=clsName, @interfName=interfName, @fieldDeclar=fieldDeclar
+	end
+end
+
+class Modifiers < Ast
+	attr_accessor :list
+	def initialize list = []
+		@list = list
 	end
 end
 
@@ -60,10 +67,10 @@ end
 =begin
 	SuperClassName::= identifer{"."identifer}
 =end
-class Super_Class_Name < Ast
-	attr_accessor :ident
-	def initialize  ident=nil
-		@ident=ident 
+class SuperClassName < Ast
+	attr_accessor :list
+	def initialize  list=[]
+		@list=list
 	end
 end
 
