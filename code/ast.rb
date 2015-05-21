@@ -34,24 +34,14 @@ class Identifier < Ast
 end
 
 =begin
-	ClassDeclaration:
-		NormalClassDeclaration | EnumDeclaration
+	class_declaration 
+      ::= 
+      { modifier } "class" identifier [ "extends" super_class_name ][ "implements" interface_name { "," interface_name } ] "{" { field_declaration } "}" 
 =end
-class Class_declaration < Ast
-  attr_accessor :nClsDcl, :enumClsDcl
-  def initialize nClsDcl=nil, enumClsDcl=nil
-		@nClsDcl, @enumClsDcl = nClsDcl, enumClsDcl
-	end
-end
-
-=begin
-	NormalClassDeclaration:
-		{ClassModifier} class Identifier [TypeParameters] [Superclass] [Superinterfaces] ClassBody 
-=end
-class Normal_Class_Declaration < Ast
-  attr_accessor :clsModif, :ident, :typeParms, :superCls, :superIntfs, :clsBody
-  def initialize clsModif=nil, ident=nil, typeParms=nil, superCls=nil, superIntfs=nil, clsBody=nil
-		@clsModif=clsModif, @ident=ident, @typeParms=typeParms, @superCls=superCls, @superIntfs=superIntfs, @clsBody=clsBody
+class Class_Declaration < Ast
+  attr_accessor :clsModif, :ident, :clsName, :interfName, :fieldDeclar
+  def initialize clsModif=nil, ident=nil, clsName=nil, interfName=nil, fieldDeclar=nil
+		@clsModif=clsModif, @ident=ident, @clsName=clsName, @interfName=interfName, @fieldDeclar=fieldDeclar
 	end
 end
 
@@ -60,7 +50,7 @@ end
 	(one of) Annotation 
 		public protected private abstract static final strictfp 
 =end
-class Class_Modifier < Ast
+class Modifier < Ast
 	attr_accessor :name
 	def initialize modifier=nil
 		@name = modifier	
@@ -68,232 +58,154 @@ class Class_Modifier < Ast
 end
 
 =begin
-TypeParameters:
-	< TypeParameterList >
+	SuperClassName::= identifer{"."identifer}
 =end
-class TypeParameters < Ast
-	attr_accessor :typeParameterList
-	def initialize  typeParameterList = []
-		@typeParameterList = typeParameterList 
+class Super_Class_Name < Ast
+	attr_accessor :ident
+	def initialize  ident=nil
+		@ident=ident 
 	end
 end
 
 =begin
-	TypeParameterList:
-		TypeParameter {, TypeParameter}
+	InterfaceClassName::= identifer{"."ident}
 =end
-class TypeParameterList < Ast
-	attr_accessor :typeParameter
-	def initialize  typeParameter = []
-		@typeParameter = typeParameter 
+class Interface_name < Ast
+	attr_accessor :ident
+	def initialize  ident=nil
+		@ident=ident 
 	end
 end
 
 =begin
-	typeParameter :
-		{TypeParameterModifier} Identifier [TypeBound]
+field_declaration 
+	 ( method_declaration | constructor_declaration | variable_declaration )  | static_initializer | ";" 
 =end
-class TypeParameter < Ast
-	attr_accessor :typeParameterModifier, :ident, :typeBound
-	def initialize  typeParameterModifier=nil, ident=nil,  typeBound=nil
-		@typeParameterModifier = typeParameterModifier 
+class Field_declaration < Ast
+	attr_accessor :method_declaration, :constructor_declaration, :variable_declaration, :static_initializer
+	def initialize  method_declaration=nil, constructor_declaration=nil,  variable_declaration=nil, static_initializer=nil
+		@method_declaration =  method_declaration 
+		@constructor_declaration = constructor_declaration
+		@variable_declaration = variable_declaration
+		@static_initializer = static_initializer
+	end
+end
+
+=begin
+methodDeclaration   
+	    { modifier } type identtifier "(" [ parameter_list ] ")" { "[" "]" }( statement_block | ";" ) 
+=end
+class Method_Declaration < Ast
+	attr_accessor :modifier, :type, :ident, :parameterList, :statementBlock
+	def initialize  modifier=nil, type=nil, ident=nil, parameterList=nil, statementBlock=nil
+		@modifier = modifier
+		@type = type
 		@ident = ident
-		@typeBound = typeBound
+		@parameterList = parameterList
+		@statementBlock = statementBlock
 	end
 end
 
 =begin
-	typePrameterModifier:
-		Annotation 
+parameter_list  
+	    parameter { "," parameter } 
 =end
-class TypeParameterModifier < Ast
-	attr_accessor :name 
-	def initialize  name=nil 
-		@name = name
-	end
-end
-
-#!!!------------------- TO DO ----------------------------
-=begin
-TypeBound:
-	extends TypeVariable
-	extends ClassOrInterfaceType {AdditionalBound} 
-=end
-class TypeBound < Ast
-end
-
-=begin
-ClassBody:
- { {ClassBodyDeclaration} } 
-=end
-class ClassBody < Ast
-	attr_accessor :classBodyDeclaration
-	def initialize classBodyDeclaration = nil
-		@classBodyDeclaration = classBodyDeclaration
+class Parameter_list < Ast
+	attr_accessor :parameter
+	def initialize parameter=nil
+		@parameter = parameter
 	end
 end
 
 =begin
-ClassBodyDeclaration:
-	ClassMemberDeclaration
-	InstanceInitializer
-	StaticInitializer
-	ConstructorDeclaration 
+parameter
+      type identifier { "[" "]" }
 =end
-class ClassBodyDeclaration < Ast
-	attr_accessor :classMemberDeclaration, :instanceIntializer, :staricInitializer, :constructorDeclaration
-	def initialize classMemberDeclaration = nil, instanceIntializer = nil, staricInitializer = nil, constructorDeclaration = nil
-		@classMemberDeclaration, @instanceIntializer, @staricInitializer, @constructorDeclaration = classMemberDeclaration, instanceIntializer, staricInitializer, constructorDeclaration	
+class Parameter < Ast
+	attr_accessor :type, :ident
+	def initialize type = nil, ident = nil
+		@type= type
+		@ident= ident
 	end
 end
 
 =begin
-ClassMemberDeclaration:
-	FieldDeclaration
-	MethodDeclaration
-	ClassDeclaration
-	InterfaceDeclaration
-; 
+Type
+ type_specifier { "[" "]" } 
 =end
-class ClassMemberDeclaration < Ast
-	attr_accessor :fieldDeclaration, :methodDeclaration, :classDeclaration, :interfaceDeclaration
-	def initialize fieldDeclaration = nil, methodDeclaration = nil, classDeclaration = nil, interfaceDeclaration = nil
-		@fieldDeclaration, @methodDeclaration, @classDeclaration, @interfaceDeclaration = fieldDeclaration, methodDeclaration, classDeclaration, interfaceDeclaration	
-	end
+class Type < Ast			
+	attr_accessor :typeSpecifier
+		def initialize typeSpecifier = nil
+			@typeSpecifier = typeSpecifier
+		end
 end
 
 =begin
-FieldDeclaration:
-	{FieldModifier} UnannType VariableDeclaratorList ; 
+type_specifier 
+      "boolean" | "byte" | "char" | "short" | "int" | "float" | "long" | "double" | class_name |interface_name 
 =end
-class FieldDeclaration < Ast
-	attr_accessor :filedModiferlist, :unannType, :varuableDeclaratorList
-	def initialize filedModiferlist = [], unannType = nil, varuableDeclaratorList = nil
-		@filedModiferlist, @unannType, @varuableDeclaratorlist = filedModiferlist, unannType, varuableDeclaratorList
-	end
-end
-
-=begin
-MethodDeclaration:
-	{MethodModifier} MethodHeader MethodBody 
-=end
-class MethodeDeclaration < Ast
-	attr_accessor :methodeModifierList, :methodHeader, :methodBody
-	def initialize methodeModifierList=[], methodHeader = nil, methodBody = nil
-			@methodeModifierList, @methodHeader, @methodBody = methodeModifierList, methodHeader, methodBody
-	end
-end
-
-=begin
-MethodModifier:
-(one of) Annotation:
-	public protected private abstract static final synchronized native strictfp 
-=end
-class MethodModifier < Ast
+class Type_specifier < Ast
 	attr_accessor :name
-	def initialize name =nil
-		@name = name
+	def initialize typeS=nil
+		@name = typeS	
 	end
 end
 
 =begin
-MethodHeader:
-	Result MethodDeclarator [Throws] TypeParameters {Annotation} Result MethodDeclarator [Throws] 
+statement_block 
+     "{" { statement } "}" 
 =end
-class MethodHeader < Ast
-	attr_accessor :result, :methodDeclarator, :typeParameters, :annotationList, :result_throw, :methodDeclarator_throw
-	def initialize result = nil, methodDeclarator = nil, typeParameters = nil, annotationList = nil, result_throw = nil, methodDeclarator_throw = nil
-		@result, @methodDeclarator, @typeParameters, @annotationList, @result_throw, @methodDeclarator_throw	= result, methodDeclarator, typeParameters, annotationList, result_throw, methodDeclarator_throw
+class Statement_block < Ast
+	attr_accessor :statement
+	def initialize statement = nil
+		@statement=statement
 	end
 end
 
 =begin
-MethodBody:
-	Block
-	; 
+statement 
+      variable_declaration | ( expression ";" ) | ( statement_block ) | ( if_statement ) | ( do_statement ) 
+			| ( while_statement ) | ( for_statement ) | ( try_statement ) |( switch_statement ) 
+      | ( "synchronized" "(" expression ")" statement ) | ( "return" [ expression ] ";" ) | ( "throw" expression ";" ) 
+			| ( identifier ":" statement ) | ( "break" [ identifier ] ";" ) | ( "continue" [ identifier ] ";" ) | ( ";" )
 =end
-class MethodBody < Ast
-	attr_accessor :block
-	def initialize block = nil
-			@block =block
+class Statement < Ast
+	attr_accessor :variableDeclaration, :expression, :statementB, :ifS, :whileS, :forS, :tryS,
+:switchS, :ident, :statement
+	def initialize variableDeclaration=nil, expression = nil, statementB = nil,ifS=nil,whileS=nil,forS=nil,tryS=nil,switchS=nil,ident=nil,statement=nil
+			@variableDeclaration, @expression, @statementB, @ifS,@whileS, @forS, @tryS, @switchS, @ident, @statement = variableDeclaration, expression, statementB,ifS,whileS, forS,tryS, switchS, ident,statement
 	end
 end
 
 =begin
-InstanceInitializer:
-	Block 
+variable_declaration 
+      { modifier } type variable_declarator { "," variable_declarator } ";" 
 =end
-class InstanceInitializer < Ast
-	attr_accessor :block
-	def initilaize block = nil
-		@block = block
+class Variable_declaration < Ast
+	attr_accessor :modifier, :type, :variableDeclarator
+	def initialize modifier =nil, type=nil, variableDeclarator=nil
+		@modifier,@type,@variableDeclarator =modifier, type, variableDeclarator
 	end
 end
 
 =begin
-Block:
-	{ [BlockStatements] } 
+variable_declarator 
+      identifier { "[" "]" } [ "=" variable_initializer ] 
 =end
-class Block < Ast
-	attr_accessor :blockStatements
-	def initialize blockStatements = nil 
-		@blockStatements = blockStatements
+class Variable_declarator < Ast
+	attr_accessor :ident, :variable_initializer
+	def initialize variable_initializer =nil, ident=nil
+		@variable_initializer, @ident= variable_initializer, ident
 	end
 end
 
 =begin
-BlockStatements:
-	BlockStatement {BlockStatement} 
+variable_initializer 
+      expression | ( "{" [ variable_initializer { "," variable_initializer } [ "," ] ] "}" ) 
 =end
-class BlockStatements < Ast
-	attr_accessor :blockStatement
-	def initialize blockStatement= nil
-		@blockStatement = blockStatement
-	end
-end
-
-=begin
-BlockStatement:
-	LocalVariableDeclarationStatement
-	ClassDeclaration
-	Statement 
-=end
-class BlockStatement < Ast
-	attr_accessor :localVariableDeclarationStatement, :classDeclaration, :statement
-	def initialize localVariableDeclarationStatement=nil, classDeclaration=nil, statement=nil
-		@localVariableDeclarationStatement, @classDeclaration, @statement = localVariableDeclarationStatement, classDeclaration, statement
-	end
-end
-
-=begin
-StaticInitializer:
-	static Block 
-=end
-class StaticInitializer < Ast
-	attr_accessor :block
-	def initilaize block = nil
-		@block = block
-	end 
-end
-
-=begin
-ConstructorDeclaration:
-	{ConstructorModifier} ConstructorDeclarator [Throws] ConstructorBody 
-=end
-class ConstructorDeclaration < Ast
-	attr_accessor :constructorModifier, :constructorDeclarator,  :constructorBody 
-	def initialize constructorModifier = nil, constructorDeclarator = nil,  constructorBody = nil
-		@constructorModifier, @constructorDeclarator,  @constructorBody = constructorModifier, constructorDeclarator,  constructorBody 	
-	end
-end
-
-=begin
-	EnumDeclaration:
-		{ClassModifier} enum Identifier [Superinterfaces] EnumBody 
-=end
-class Enum_Declaration < Ast
-  attr_accessor :clsModif, :ident, :superIntfs, :enumBody
-  def initialize clsModif=nil, ident=nil, superIntfs=nil, enumBody=nil
-		@clsModif=clsModif, @ident=ident, @superIntfs=superIntfs, @enumBody=enumBody
+class variable_initializer < Ast
+	attr_accessor :expression, :variable_initializer
+	def initialize expression =nil, variable_initializer=nil
+		 @variable_initializer,@expression= variable_initializer, expression
 	end
 end

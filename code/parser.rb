@@ -177,6 +177,17 @@ class Parser
 if class modifier , all  return 1
 if var modifier , except :abstract return 2
 else return 0 error
+
+     "public" 
+      | "private" 
+      | "protected" 
+      | "static" 
+      | "final" 
+      | "native" 
+      | "synchronized" 
+      | "abstract" 
+      | "threadsafe" 
+      | "transient" 
 =end
 	def parseModifier 
 			puts "parseModifier"
